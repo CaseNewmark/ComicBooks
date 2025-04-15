@@ -1,0 +1,57 @@
+# .NET & Aspire
+bin/
+obj/
+out/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ASP.NET Core
+wwwroot/staticwebassets.build.json
+wwwroot/staticwebassets.development.json
+wwwroot/staticwebassets.runtime.json
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Rider
+.idea/
+*.sln.iml
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Aspire specific
+**/AppHost/bin/
+**/AppHost/obj/
+**/AppHost/out/
+**/AppHost/.vs/
+**/AppHost/.aspire/
+
+# Docker
+**/AppHost/.docker/
+docker-compose.override.yml
+docker-compose.vs.debug.yml
+docker-compose.vs.release.yml
+
+# User secrets
+**/secrets.json
+
+# Npm/Yarn/Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Others
+*.db
+*.sqlite
+.env
+.env.*

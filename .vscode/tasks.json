@@ -1,0 +1,11 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "watch-apphost",
+            "type": "shell",
+            "command": "dotnet watch --project ComicBooks.AppHost",
+            "isBackground": true,
+        }
+    ]
+}

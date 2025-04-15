@@ -1,0 +1,38 @@
+@page "/floorplans/edit/{Id:guid}"
+@inject ComicBooksApiClient ComicBooksApiClient
+@using ComicBooks.SharedDtos
+@rendermode InteractiveServer
+
+<h3>Edit Floor Plan</h3>
+
+@if (floorPlan is null)
+{
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input class="form-control" @bind="floorPlan.Name" />
+    </div>
+    <button class="btn btn-primary" @onclick="Save">Save</button>
+    <!-- Add UI for sections here -->
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+    private FloorPlanDto? floorPlan;
+
+    protected override async Task OnInitializedAsync()
+    {
+        floorPlan = await ComicBooksApiClient.GetFloorPlanAsync(Id);
+    }
+
+    private async Task Save()
+    {
+        await ComicBooksApiClient.UpdateFloorPlanAsync(floorPlan!);
+        // Optionally navigate back or show a success message
+    }
+}
