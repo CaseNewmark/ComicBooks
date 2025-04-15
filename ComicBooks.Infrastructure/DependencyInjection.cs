@@ -15,6 +15,7 @@ namespace ComicBooks.Infrastructure
 
             // Register infrastructure services here
             builder.Services.AddScoped<IFloorPlanService, FloorPlanService>();
+            builder.Services.AddScoped<ISectionService, SectionService>();
 
             builder.Services.AddHostedService<DatabaseMigrationHostedService>();
 

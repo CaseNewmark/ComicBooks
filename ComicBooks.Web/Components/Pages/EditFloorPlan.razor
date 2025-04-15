@@ -17,13 +17,47 @@ else
         <label class="form-label">Name</label>
         <input class="form-control" @bind="floorPlan.Name" />
     </div>
+
+    <h4>Sections</h4>
+    if (floorPlan.Sections == null || !floorPlan.Sections.Any())
+    {
+        <p>No sections added yet.</p>
+    }
+    <ul>
+    @if (floorPlan.Sections != null && floorPlan.Sections.Any())
+    {
+        @foreach (var section in floorPlan.Sections)
+        {
+            <li>
+                @(section?.Location ?? "Unknown Location") - @(section?.Capacity ?? 0) (@(section?.Genre ?? "Unknown Genre"))
+            </li>
+        }
+    }
+        <li>
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" @bind="newSection.Location" placeholder="Location" />
+                </div>
+                <div class="col-md-3">
+                    <input type="number" class="form-control" @bind="newSection.Capacity" placeholder="Capacity" />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" @bind="newSection.Genre" placeholder="Genre" />
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-success" @onclick="AddSection">Add Section</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+
     <button class="btn btn-primary" @onclick="Save">Save</button>
-    <!-- Add UI for sections here -->
 }
 
 @code {
     [Parameter] public Guid Id { get; set; }
     private FloorPlanDto? floorPlan;
+    private SectionDto newSection = new SectionDto();
 
     protected override async Task OnInitializedAsync()
     {
@@ -34,5 +68,18 @@ else
     {
         await ComicBooksApiClient.UpdateFloorPlanAsync(floorPlan!);
         // Optionally navigate back or show a success message
+    }
+
+    private void AddSection()
+    {
+        if (floorPlan != null)
+        {
+            if (floorPlan.Sections == null)
+            {
+                floorPlan.Sections = new List<SectionDto>();
+            }
+            floorPlan.Sections.Add(new SectionDto { Location = newSection.Location, Capacity = newSection.Capacity, Genre = newSection.Genre });
+            newSection = new SectionDto(); // Reset newSection for the next entry
+        }
     }
 }

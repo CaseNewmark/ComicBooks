@@ -21,13 +21,12 @@ namespace ComicBooks.Infrastructure.Data
             modelBuilder.Entity<Section>(entity =>
             {
                 entity.HasKey(s => s.Id);
-                entity.Property(s => s.Name).IsRequired().HasMaxLength(100);
+                entity.Property(s => s.Location).IsRequired().HasMaxLength(100);
                 entity.Property(s => s.Capacity).IsRequired();
-                entity.Property(s => s.Genres)
-                      .HasConversion(
-                          genres => string.Join(',', genres),
-                          genres => genres.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
-                      );
+                entity.Property(s => s.Genre).IsRequired().HasMaxLength(100);
+                entity.HasOne(s => s.FloorPlan)
+                      .WithMany(fp => fp.Sections)
+                      .HasForeignKey(s => s.FloorPlanId);
             });
 
             // Configure FloorPlan entity
