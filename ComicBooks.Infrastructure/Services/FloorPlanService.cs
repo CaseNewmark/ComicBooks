@@ -85,16 +85,31 @@ namespace ComicBooks.Infrastructure.Services
 
             floorPlan.Name = name;
 
-            // Synchronize sections (simple approach: remove all and re-add)
-            floorPlan.Sections.Clear();
-            foreach (var sectionDto in sections)
+            // Remove sections not in the new list (by Id)
+            floorPlan.Sections.RemoveAll(s => !sections.Any(ns => ns.Id == s.Id));
+
+            // Add or update sections
+            foreach (var section in sections)
             {
-                floorPlan.Sections.Add(new Section
+                var existing = floorPlan.Sections.FirstOrDefault(s => s.Id == section.Id);
+                if (existing == null)
                 {
-                    Location = sectionDto.Location,
-                    Capacity = sectionDto.Capacity,
-                    Genre = sectionDto.Genre
-                });
+                    // New section
+                    floorPlan.Sections.Add(new Section
+                    {
+                        Id = section.Id, // If Id is set by client, otherwise omit
+                        Location = section.Location,
+                        Capacity = section.Capacity,
+                        Genre = section.Genre
+                    });
+                }
+                else
+                {
+                    // Update existing section
+                    existing.Location = section.Location;
+                    existing.Capacity = section.Capacity;
+                    existing.Genre = section.Genre;
+                }
             }
 
             await _context.SaveChangesAsync();
