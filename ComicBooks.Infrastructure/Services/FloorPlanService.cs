@@ -74,14 +74,28 @@ namespace ComicBooks.Infrastructure.Services
             }
         }
 
-        public async Task UpdateFloorPlanAsync(Guid id, string name /*, ...other properties as needed */)
+        public async Task UpdateFloorPlanAsync(Guid id, string name, List<Section> sections)
         {
-            var floorPlan = await _context.FloorPlans.FindAsync(id);
+            var floorPlan = await _context.FloorPlans
+                .Include(fp => fp.Sections)
+                .FirstOrDefaultAsync(fp => fp.Id == id);
+
             if (floorPlan == null)
-                throw new KeyNotFoundException($"FloorPlan with ID {id} not found.");
+                throw new KeyNotFoundException();
 
             floorPlan.Name = name;
-            // Update other properties as needed
+
+            // Synchronize sections (simple approach: remove all and re-add)
+            floorPlan.Sections.Clear();
+            foreach (var sectionDto in sections)
+            {
+                floorPlan.Sections.Add(new Section
+                {
+                    Location = sectionDto.Location,
+                    Capacity = sectionDto.Capacity,
+                    Genre = sectionDto.Genre
+                });
+            }
 
             await _context.SaveChangesAsync();
         }

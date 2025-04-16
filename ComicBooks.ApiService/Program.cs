@@ -2,7 +2,7 @@ using ComicBooks.Application.Services;
 using ComicBooks.Infrastructure;
 using ComicBooks.SharedDtos;
 using Microsoft.AspNetCore.Mvc;
-
+using ComicBooks.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,7 +47,14 @@ app.MapGet("/api/floorplans/{id:guid}", async (IFloorPlanService floorPlanServic
 
 app.MapPut("/api/floorplans/{id:guid}", async (IFloorPlanService floorPlanService, Guid id, FloorPlanDto dto) =>
 {
-    await floorPlanService.UpdateFloorPlanAsync(id, dto.Name /*, ...sections... */);
+    var sections = dto.Sections?.Select(s => new Section
+    {
+        Location = s.Location,
+        Capacity = s.Capacity,
+        Genre = s.Genre
+    }).ToList() ?? new List<Section>();
+
+    await floorPlanService.UpdateFloorPlanAsync(id, dto.Name, sections);
     return Results.NoContent();
 });
 

@@ -19,37 +19,54 @@ else
     </div>
 
     <h4>Sections</h4>
-    if (floorPlan.Sections == null || !floorPlan.Sections.Any())
-    {
-        <p>No sections added yet.</p>
-    }
-    <ul>
-    @if (floorPlan.Sections != null && floorPlan.Sections.Any())
-    {
-        @foreach (var section in floorPlan.Sections)
-        {
-            <li>
-                @(section?.Location ?? "Unknown Location") - @(section?.Capacity ?? 0) (@(section?.Genre ?? "Unknown Genre"))
-            </li>
-        }
-    }
-        <li>
-            <div class="row">
-                <div class="col-md-4">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Location</th>
+                <th>Capacity</th>
+                <th>Genre</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (floorPlan.Sections != null && floorPlan.Sections.Any())
+            {
+                @foreach (var section in floorPlan.Sections.Select((value, index) => new { value, index }))
+                {
+                    <tr>
+                        <td>@(section.value?.Location ?? "Unknown Location")</td>
+                        <td>@(section.value?.Capacity ?? 0)</td>
+                        <td>@(section.value?.Genre ?? "Unknown Genre")</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" @onclick="() => DeleteSection(section.index)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted">No sections added yet.</td>
+                </tr>
+            }
+            <tr>
+                <td>
                     <input type="text" class="form-control" @bind="newSection.Location" placeholder="Location" />
-                </div>
-                <div class="col-md-3">
+                </td>
+                <td>
                     <input type="number" class="form-control" @bind="newSection.Capacity" placeholder="Capacity" />
-                </div>
-                <div class="col-md-3">
+                </td>
+                <td>
                     <input type="text" class="form-control" @bind="newSection.Genre" placeholder="Genre" />
-                </div>
-                <div class="col-md-2">
+                </td>
+                <td>
                     <button class="btn btn-success" @onclick="AddSection">Add Section</button>
-                </div>
-            </div>
-        </li>
-    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
     <button class="btn btn-primary" @onclick="Save">Save</button>
 }
@@ -79,7 +96,15 @@ else
                 floorPlan.Sections = new List<SectionDto>();
             }
             floorPlan.Sections.Add(new SectionDto { Location = newSection.Location, Capacity = newSection.Capacity, Genre = newSection.Genre });
-            newSection = new SectionDto(); // Reset newSection for the next entry
+            newSection = new SectionDto();
+        }
+    }
+
+    private void DeleteSection(int index)
+    {
+        if (floorPlan?.Sections != null && index >= 0 && index < floorPlan.Sections.Count)
+        {
+            floorPlan.Sections.RemoveAt(index);
         }
     }
 }
