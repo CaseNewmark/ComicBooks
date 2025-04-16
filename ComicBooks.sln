@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicBooks.Application", "C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicBooks.Infrastructure", "ComicBooks.Infrastructure\ComicBooks.Infrastructure.csproj", "{9702E53D-E46C-4369-8B1D-4F441EA9AED5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComicBooks.SharedDtos", "ComicBooks.SharedDtos\ComicBooks.SharedDtos.csproj", "{340548D4-9924-4F6A-9C6A-43A5A4B2487A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,18 @@ Global
 		{9702E53D-E46C-4369-8B1D-4F441EA9AED5}.Release|x64.Build.0 = Release|Any CPU
 		{9702E53D-E46C-4369-8B1D-4F441EA9AED5}.Release|x86.ActiveCfg = Release|Any CPU
 		{9702E53D-E46C-4369-8B1D-4F441EA9AED5}.Release|x86.Build.0 = Release|Any CPU
+		{340548D4-9924-4F6A-9C6A-43A5A4B2487A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{340548D4-9924-4F6A-9C6A-43A5A4B2487A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{340548D4-9924-4F6A-9C6A-43A5A4B2487A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{340548D4-9924-4F6A-9C6A-43A5A4B2487A}.Debug|x64.Build.0 = Debug|Any CPU
+		{340548D4-9924-4F6A-9C6A-43A5A4B2487A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{340548D4-9924-4F6A-9C6A-43A5A4B2487A}.Debug|x86.Build.0 = Debug|Any CPU
+		{340548D4-9924-4F6A-9C6A-43A5A4B2487A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{340548D4-9924-4F6A-9C6A-43A5A4B2487A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{340548D4-9924-4F6A-9C6A-43A5A4B2487A}.Release|x64.ActiveCfg = Release|Any CPU
+		{340548D4-9924-4F6A-9C6A-43A5A4B2487A}.Release|x64.Build.0 = Release|Any CPU
+		{340548D4-9924-4F6A-9C6A-43A5A4B2487A}.Release|x86.ActiveCfg = Release|Any CPU
+		{340548D4-9924-4F6A-9C6A-43A5A4B2487A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,12 +14,12 @@ namespace ComicBooks.Infrastructure.Services
             _context = context;
         }
 
-        public async Task<Section> CreateSectionAsync(string name, List<string> genres, int capacity)
+        public async Task<Section> CreateSectionAsync(string location, string genre, int capacity)
         {
             var section = new Section
             {
-                Name = name,
-                Genres = genres,
+                Location = location,
+                Genre = genre,
                 Capacity = capacity
             };
 

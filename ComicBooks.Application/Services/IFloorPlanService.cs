@@ -9,6 +9,6 @@ namespace ComicBooks.Application.Services
         Task<FloorPlan> GetFloorPlanAsync(Guid floorPlanId);
         Task<List<FloorPlan>> GetAllFloorPlansAsync();
         Task DeleteFloorPlanAsync(Guid id);
-        Task UpdateFloorPlanAsync(Guid id, string name /*, ...other properties as needed */);
+        Task UpdateFloorPlanAsync(Guid id, string name, List<Section> sections);
     }
 }

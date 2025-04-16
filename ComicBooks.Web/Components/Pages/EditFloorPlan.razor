@@ -3,27 +3,86 @@
 @using ComicBooks.SharedDtos
 @rendermode InteractiveServer
 
-<h3>Edit Floor Plan</h3>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-8">
+            <h3>Edit Floor Plan</h3>
 
-@if (floorPlan is null)
-{
-    <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Loading...</span>
+            @if (floorPlan is null)
+            {
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            }
+            else
+            {
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input class="form-control" @bind="floorPlan.Name" />
+                </div>
+
+                <h4>Sections</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Location</th>
+                            <th>Capacity</th>
+                            <th>Genre</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (floorPlan.Sections != null && floorPlan.Sections.Any())
+                        {
+                            @foreach (var section in floorPlan.Sections.Select((value, index) => new { value, index }))
+                            {
+                                <tr>
+                                    <td>@(section.value?.Location ?? "Unknown Location")</td>
+                                    <td>@(section.value?.Capacity ?? 0)</td>
+                                    <td>@(section.value?.Genre ?? "Unknown Genre")</td>
+                                    <td>
+                                        <button class="btn btn-danger" @onclick="() => DeleteSection(section.index)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No sections added yet.</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>
+                                <input type="text" class="form-control" @bind="newSection.Location" placeholder="Location" />
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" @bind="newSection.Capacity" placeholder="Capacity" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" @bind="newSection.Genre" placeholder="Genre" />
+                            </td>
+                            <td>
+                                <button class="btn btn-success" @onclick="AddSection" title="Add Section">
+                                    <i class="bi bi-plus-circle"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button class="btn btn-primary" @onclick="Save">Save</button>
+            }
+        </div>
     </div>
-}
-else
-{
-    <div class="mb-3">
-        <label class="form-label">Name</label>
-        <input class="form-control" @bind="floorPlan.Name" />
-    </div>
-    <button class="btn btn-primary" @onclick="Save">Save</button>
-    <!-- Add UI for sections here -->
-}
+</div>
 
 @code {
     [Parameter] public Guid Id { get; set; }
     private FloorPlanDto? floorPlan;
+    private SectionDto newSection = new SectionDto();
 
     protected override async Task OnInitializedAsync()
     {
@@ -34,5 +93,26 @@ else
     {
         await ComicBooksApiClient.UpdateFloorPlanAsync(floorPlan!);
         // Optionally navigate back or show a success message
+    }
+
+    private void AddSection()
+    {
+        if (floorPlan != null)
+        {
+            if (floorPlan.Sections == null)
+            {
+                floorPlan.Sections = new List<SectionDto>();
+            }
+            floorPlan.Sections.Add(new SectionDto { Location = newSection.Location, Capacity = newSection.Capacity, Genre = newSection.Genre });
+            newSection = new SectionDto();
+        }
+    }
+
+    private void DeleteSection(int index)
+    {
+        if (floorPlan?.Sections != null && index >= 0 && index < floorPlan.Sections.Count)
+        {
+            floorPlan.Sections.RemoveAt(index);
+        }
     }
 }
