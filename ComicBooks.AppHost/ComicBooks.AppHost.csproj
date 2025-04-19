@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ComicBooks.ApiService\ComicBooks.ApiService.csproj" />
     <ProjectReference Include="..\ComicBooks.Web\ComicBooks.Web.csproj" />
+    <ProjectReference Include="..\ComicBooks.Generator\ComicBooks.Generator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

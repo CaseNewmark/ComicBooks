@@ -1,0 +1,1 @@
+dotnet run https://localhost:7496/openapi/v1.json ..\ComicBooks.Angular\src\services\api-client-service.ts

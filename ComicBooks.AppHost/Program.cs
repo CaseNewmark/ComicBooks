@@ -10,6 +10,11 @@ var apiService = builder.AddProject<Projects.ComicBooks_ApiService>("apiservice"
                         .WithReference(postgresdb)
                         .WaitFor(postgresdb);
 
+// builder.AddProject<Projects.ComicBooks_Generator>("generator")
+//     .WithReference(apiService)
+//     .WaitFor(apiService)
+//     .WithArgs(new string[] { $"hhh", "../ComicBooks.Angular/src/" });
+
 builder.AddProject<Projects.ComicBooks_Web>("webfrontend")
     .WithExternalHttpEndpoints()
     .WithReference(apiService)
