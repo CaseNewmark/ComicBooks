@@ -23,6 +23,7 @@ builder.AddProject<Projects.ComicBooks_Web>("webfrontend")
 builder.AddNpmApp("comicbooks", "../ComicBooks.Angular")
     .WithReference(apiService)
     .WaitFor(apiService)
+    .WithEnvironment("PORT", "4200")
     .WithHttpEndpoint(env: "PORT")
     .WithExternalHttpEndpoints();
 
