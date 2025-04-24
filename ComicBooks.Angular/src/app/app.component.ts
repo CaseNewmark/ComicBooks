@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ApiClientService } from '../services/api-client-service';
+import { ApiClientService, FloorPlanDto } from '../services/api-client-service';
 
 @Component({
   selector: 'app-root',
@@ -12,11 +12,13 @@ import { ApiClientService } from '../services/api-client-service';
 export class AppComponent implements OnInit {
   title = 'ComicBook.Angular';
 
+  floorPlans: FloorPlanDto[] = [];
+
   constructor(private apiClient: ApiClientService) { }
   
   ngOnInit(): void {
-    this.apiClient.floorplansAll().subscribe(comicBooks => {
-      console.log(comicBooks);
+    this.apiClient.floorplansAll().subscribe(floorPlans => {
+      this.floorPlans = floorPlans;
     });
   }
 }
