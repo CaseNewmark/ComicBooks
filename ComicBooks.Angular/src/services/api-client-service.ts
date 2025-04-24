@@ -25,14 +25,14 @@ export class ApiClientService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://localhost:54537";
+        this.baseUrl = baseUrl ?? "https://localhost:58556";
     }
 
     /**
-     * @return OK
+     * @return Created
      */
-    floorplansPOST(body: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/floorplans";
+    createFloorPlan(body: string): Observable<FloorPlanDto> {
+        let url_ = this.baseUrl + "/api/floorplan";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -43,33 +43,36 @@ export class ApiClientService {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
+                "Accept": "application/json"
             })
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processFloorplansPOST(response_);
+            return this.processCreateFloorPlan(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processFloorplansPOST(response_ as any);
+                    return this.processCreateFloorPlan(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<FloorPlanDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<FloorPlanDto>;
         }));
     }
 
-    protected processFloorplansPOST(response: HttpResponseBase): Observable<void> {
+    protected processCreateFloorPlan(response: HttpResponseBase): Observable<FloorPlanDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
+        if (status === 201) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result201: any = null;
+            result201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as FloorPlanDto;
+            return _observableOf(result201);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -82,8 +85,8 @@ export class ApiClientService {
     /**
      * @return OK
      */
-    floorplansAll(): Observable<FloorPlanDto[]> {
-        let url_ = this.baseUrl + "/api/floorplans";
+    getAllFloorPlans(): Observable<FloorPlanDto[]> {
+        let url_ = this.baseUrl + "/api/floorplan";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -95,11 +98,11 @@ export class ApiClientService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processFloorplansAll(response_);
+            return this.processGetAllFloorPlans(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processFloorplansAll(response_ as any);
+                    return this.processGetAllFloorPlans(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<FloorPlanDto[]>;
                 }
@@ -108,7 +111,7 @@ export class ApiClientService {
         }));
     }
 
-    protected processFloorplansAll(response: HttpResponseBase): Observable<FloorPlanDto[]> {
+    protected processGetAllFloorPlans(response: HttpResponseBase): Observable<FloorPlanDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -132,8 +135,8 @@ export class ApiClientService {
     /**
      * @return OK
      */
-    floorplansGET(id: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/floorplans/{id}";
+    getFloorPlanById(id: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/floorplan/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -147,11 +150,11 @@ export class ApiClientService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processFloorplansGET(response_);
+            return this.processGetFloorPlanById(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processFloorplansGET(response_ as any);
+                    return this.processGetFloorPlanById(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<void>;
                 }
@@ -160,7 +163,7 @@ export class ApiClientService {
         }));
     }
 
-    protected processFloorplansGET(response: HttpResponseBase): Observable<void> {
+    protected processGetFloorPlanById(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -180,10 +183,10 @@ export class ApiClientService {
     }
 
     /**
-     * @return OK
+     * @return No Content
      */
-    floorplansPUT(id: string, body: FloorPlanDto): Observable<void> {
-        let url_ = this.baseUrl + "/api/floorplans/{id}";
+    updateFloorPlan(id: string, body: FloorPlanDto): Observable<void> {
+        let url_ = this.baseUrl + "/api/floorplan/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -201,11 +204,11 @@ export class ApiClientService {
         };
 
         return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processFloorplansPUT(response_);
+            return this.processUpdateFloorPlan(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processFloorplansPUT(response_ as any);
+                    return this.processUpdateFloorPlan(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<void>;
                 }
@@ -214,14 +217,14 @@ export class ApiClientService {
         }));
     }
 
-    protected processFloorplansPUT(response: HttpResponseBase): Observable<void> {
+    protected processUpdateFloorPlan(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
+        if (status === 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return _observableOf(null as any);
             }));
@@ -234,10 +237,10 @@ export class ApiClientService {
     }
 
     /**
-     * @return OK
+     * @return No Content
      */
-    floorplansDELETE(id: string): Observable<void> {
-        let url_ = this.baseUrl + "/api/floorplans/{id}";
+    deleteFloorPlan(id: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/floorplan/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -251,11 +254,11 @@ export class ApiClientService {
         };
 
         return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processFloorplansDELETE(response_);
+            return this.processDeleteFloorPlan(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processFloorplansDELETE(response_ as any);
+                    return this.processDeleteFloorPlan(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<void>;
                 }
@@ -264,14 +267,14 @@ export class ApiClientService {
         }));
     }
 
-    protected processFloorplansDELETE(response: HttpResponseBase): Observable<void> {
+    protected processDeleteFloorPlan(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
+        if (status === 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return _observableOf(null as any);
             }));
