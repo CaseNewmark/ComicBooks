@@ -1,0 +1,49 @@
+<div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-8">
+        <h3>Create Floor Plan</h3>
+        <div class="input-group mb-3">
+          <input
+            [(ngModel)]="floorPlanName"
+            class="form-control"
+            placeholder="Floor Plan Name"
+            name="floorPlanName"
+          />
+          <button class="btn btn-primary" (click)="createFloorPlan()">Create</button>
+        </div>
+        @if (createdFloorPlan) {
+          <div class="alert alert-success mt-2">
+            Created Floor Plan:
+            <strong>{{ createdFloorPlan.name }}</strong>
+            (ID: {{ createdFloorPlan.id }})
+          </div>
+        }
+  
+        <h3 class="mt-4">Existing Floor Plans</h3>
+        @if (!floorPlans) {
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        }
+        @else {
+          <ul class="list-group">
+            @for (plan of floorPlans; track plan) {
+              <li class="list-group-item d-flex justify-content-between align-items-center"
+                  (dblclick)="editFloorPlan(plan)">
+                <span>
+                  <strong>{{ plan.name }}</strong>
+                  <small class="text-muted ms-2">(ID: {{ plan.id }})</small>
+                </span>
+                <button class="btn btn-danger btn-sm" (click)="deleteFloorPlan(plan.id)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </li>
+            }
+            @empty {
+              <div class="alert alert-info">No floor plans found.</div>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+  </div>
