@@ -25,7 +25,7 @@ export class ApiClientService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://localhost:58556";
+        this.baseUrl = baseUrl ?? "https://localhost:60741";
     }
 
     /**
@@ -135,7 +135,7 @@ export class ApiClientService {
     /**
      * @return OK
      */
-    getFloorPlanById(id: string): Observable<void> {
+    getFloorPlanById(id: string): Observable<FloorPlanDto> {
         let url_ = this.baseUrl + "/api/floorplan/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -146,6 +146,7 @@ export class ApiClientService {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -156,14 +157,14 @@ export class ApiClientService {
                 try {
                     return this.processGetFloorPlanById(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<FloorPlanDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<FloorPlanDto>;
         }));
     }
 
-    protected processGetFloorPlanById(response: HttpResponseBase): Observable<void> {
+    protected processGetFloorPlanById(response: HttpResponseBase): Observable<FloorPlanDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -172,7 +173,9 @@ export class ApiClientService {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as FloorPlanDto;
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {

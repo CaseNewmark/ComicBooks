@@ -27,9 +27,10 @@ public static class FloorPlanRoutes
         app.MapGet("/api/floorplan/{id:guid}", async (IFloorPlanService floorPlanService, IMapper mapper, Guid id) =>
         {
             var floorPlan = await floorPlanService.GetFloorPlanAsync(id);
-            return floorPlan is not null ? TypedResults.Ok(mapper.Map<FloorPlanDto>(floorPlan)) : Results.NotFound();
+            return floorPlan is not null ? Results.Ok(mapper.Map<FloorPlanDto>(floorPlan)) : Results.NotFound();
         })
-        .WithName("GetFloorPlanById");
+        .WithName("GetFloorPlanById")
+        .Produces<FloorPlanDto>();
 
         app.MapPut("/api/floorplan/{id:guid}", async (IFloorPlanService floorPlanService, Guid id, FloorPlanDto dto) =>
         {

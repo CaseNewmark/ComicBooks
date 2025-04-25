@@ -1,0 +1,2 @@
+### GetAllFloorPlansAsync
+GET http://localhost:4200/api/floorplan

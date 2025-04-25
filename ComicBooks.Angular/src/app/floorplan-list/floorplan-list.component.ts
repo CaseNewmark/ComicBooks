@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ApiClientService, FloorPlanDto } from '../../services/api-client-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-floorplan-list',
@@ -13,6 +14,8 @@ export class FloorplanListComponent implements OnInit {
   floorPlanName: string = '';
   createdFloorPlan?: FloorPlanDto;
   floorPlans?: FloorPlanDto[] = undefined;
+
+  private readonly router = inject(Router);
 
   constructor(private apiClient: ApiClientService) {
 
@@ -46,12 +49,11 @@ export class FloorplanListComponent implements OnInit {
 
   editFloorPlan(plan: FloorPlanDto): void {
     if (!plan.id) return;
-    
+
     // this.apiClient.updateFloorPlan(plan.id, plan).subscribe(() => {
     //   console.log(`Edit FloorPlan with ID: ${plan.id}`);
     // });
 
-    //this.router.navigate(['/floorplans/edit', id]);
+    this.router.navigate(['/floorplans/', plan.id]);
   }
-
 }
