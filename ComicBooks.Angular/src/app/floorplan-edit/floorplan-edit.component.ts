@@ -1,10 +1,11 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ApiClientService, FloorPlanDto } from '../../services/api-client-service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-floorplan-edit',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './floorplan-edit.component.html',
   styleUrl: './floorplan-edit.component.css'
 })
